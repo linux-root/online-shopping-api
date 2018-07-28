@@ -1,50 +1,45 @@
 const Model = require('../../model');
-const {Product} = Model;
+const {Product} = Model; //import constructor ?
 
 const ProductController = {
     all(req, res) {
-        Product.find({}).exec((error, product) => res.json(product));
+        Product.find({}).exec((error, products) => res.json(products));
     }
     ,
 
     byId(req, res) {
         const idParam = req.params.id;
-        // Returns a single product
-        // based on the passed in ID parameter
         Product.findOne({_id: idParam})
             .exec( (err, product) => res.json(product) );
     },
 
     create(req, res) {
         const requestBody = req.body;
-        // Creates a new record from a submitted form
-        console.log(requestBody);
         const newProduct = new Product(requestBody);
-        // and saves the record to
-        // the data base
         newProduct.save( (err, saved) => {
-            // Returns the saved product/*   const newProduct = new Product(requestBody);
-        // and saves the record to
-        // the data base
-        newProduct.save( (err, saved) => {
-            // Returns the saved product
-            // after a successful save
-            Product
-                .findOne({_id: saved._id})
-                .exec((err, product) => res.json(product));
-        } );
-            // after a successful save
-            Product
-                .findOne({_id: saved._id})
-                .exec((err, product) => res.json(product));
-        } );
+            Product.findOne({_id: saved._id}).exec((err, product) => res.json(product));
+        });
     },
 
-    update() {
+    update(req, res) {
+        const idParam = req.params.id;
+        const updatedProduct = req.body;
 
+        Product.findOne({id: idParam}, (error, data) => {
+            data.name = updatedProduct.name;
+            data.description = updatedProduct.description;
+            data.image = updatedProduct.image;
+            data.price = updatedProduct.price;
+
+            data.save((error, updatedProduct) => {
+                res.json(updatedProduct);
+            });
+        })
     },
-    remove(id) {
+    remove(req, res) {
+        const idParam = req.params.id;
+        Product.findOne({_id: idParam}).remove((error, removedProduct) => res.json(removedProduct));
     }
-}
+};
 
 module.exports = ProductController;
