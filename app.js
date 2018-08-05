@@ -53,7 +53,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_URL}`);
-//mongoose.connect('mongodb://admin:75meomay@ds237641.mlab.com:37641/online-shopping', { useNewUrlParser: true });
+//mongoose.connect(`mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_URL}`);
+mongoose.connect('mongodb://admin:75meomay@ds237641.mlab.com:37641/online-shopping', { useNewUrlParser: true });
 
 module.exports = app;

@@ -25,7 +25,9 @@ const ProductController = {
         const idParam = req.params.id;
         const updatedProduct = req.body;
 
-        Product.findOne({id: idParam}, (error, data) => {
+        console.debug(idParam);
+        console.debug(updatedProduct);
+        Product.findOne({_id: idParam}, (error, data) => {
             data.name = updatedProduct.name;
             data.description = updatedProduct.description;
             data.image = updatedProduct.image;
