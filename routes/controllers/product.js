@@ -1,21 +1,27 @@
+
 const Model = require('../../model');
-const {Product} = Model; //import constructor ?
+const {Product, Item} = Model; //import constructor ?
+ const HOST_IMG = 'https://damp-scrubland-52881.herokuapp.com/images/products/';
 
 const ProductController = {
     all(req, res) {
         Product.find({}).exec((error, products) => res.json(products));
     }
     ,
-
     byId(req, res) {
         const idParam = req.params.id;
         Product.findOne({_id: idParam})
             .exec( (err, product) => res.json(product) );
     },
 
-    create(req, res) {
+    create(req, res, next) {
         const requestBody = req.body;
-        const newProduct = new Product(requestBody);
+        var fileName = req.file.filename;
+        var productString = requestBody.product;
+        var product = JSON.parse(productString);
+        product.image = HOST_IMG + fileName;
+        console.debug(product);
+        const newProduct = new Product(product);
         newProduct.save( (err, saved) => {
             Product.findOne({_id: saved._id}).exec((err, product) => res.json(product));
         });

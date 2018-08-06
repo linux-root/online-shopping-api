@@ -12,7 +12,13 @@ const ProductSchema = Schema({
     description: String
 });
 
+const Item = new Schema(
+    {
+        img: {data: Buffer, contentType: String}
+    }
+);
+
 
 const Product = model('Product', ProductSchema);
 
-module.exports = {Product};
+module.exports = {Product, Item};
