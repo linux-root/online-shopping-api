@@ -1,7 +1,17 @@
 
 const Model = require('../../model');
 const {Product, Item} = Model; //import constructor ?
- const HOST_IMG = 'https://damp-scrubland-52881.herokuapp.com/images/products/';
+ //const HOST_IMG = 'http://35.198.207.238:3000/images/products/';
+ const HOST_IMG = 'http://localhost:3000/images/products/';
+
+ var getProductFromRequestBody = function (requestBody){
+    var fileName = req.file.filename;
+    var productString = requestBody.product;
+    var product = JSON.parse(productString);
+    product.image = HOST_IMG + fileName;
+    console.debug(product);
+    return product;
+}
 
 const ProductController = {
     all(req, res) {
@@ -16,12 +26,7 @@ const ProductController = {
 
     create(req, res, next) {
         const requestBody = req.body;
-        var fileName = req.file.filename;
-        var productString = requestBody.product;
-        var product = JSON.parse(productString);
-        product.image = HOST_IMG + fileName;
-        console.debug(product);
-        const newProduct = new Product(product);
+        const newProduct = new Product(getProductFromRequestBody(requestBody));
         newProduct.save( (err, saved) => {
             Product.findOne({_id: saved._id}).exec((err, product) => res.json(product));
         });
@@ -29,10 +34,9 @@ const ProductController = {
 
     update(req, res) {
         const idParam = req.params.id;
-        const updatedProduct = req.body;
-
-        console.debug(idParam);
-        console.debug(updatedProduct);
+        console.debug('updating product id: ' + idParam);
+        var updatedProduct = getProductFromRequestBody(req.body);
+        console.debug(updatedProduct.image)
         Product.findOne({_id: idParam}, (error, data) => {
             data.name = updatedProduct.name;
             data.description = updatedProduct.description;
