@@ -17,6 +17,6 @@ var productController = require('../controllers/product');
 router.get('/products', productController.all);
 router.get('/products/:id', productController.byId);
 router.post('/products', upload.single('image'), productController.create);
-router.put('/products/:id', productController.update);
+router.put('/products/:id', upload.single('image'), productController.update);
 router.delete('/products/:id', productController.remove);
 module.exports = router;
